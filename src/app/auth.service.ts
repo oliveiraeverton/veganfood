@@ -1,6 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { Router } from '@angular/router';
-
+import { HttpClient } from '@angular/common/http';
+import { tap, catchError, of, map, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
+import { isPlatformBrowser } from '@angular/common';
 
 interface User {
   isAuthenticated: boolean;
@@ -11,50 +14,57 @@ interface User {
   providedIn: 'root'
 })
 export class AuthService {
+  private userSubject = new BehaviorSubject<User>({ isAuthenticated: false, role: null });
+  public user$ = this.userSubject.asObservable();
 
-  private user: User = { isAuthenticated: false, role: null };
-
-  constructor(private router: Router) {
-    // Simulação de dados de autenticação (substitua pela sua lógica real)
-    const storedUser = localStorage.getItem('currentUser');
-    if (storedUser) {
-      this.user = JSON.parse(storedUser);
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    // Tenta carregar o estado do usuário do localStorage apenas no navegador
+    if (isPlatformBrowser(this.platformId)) {
+      const storedUser = localStorage.getItem('currentUser');
+      if (storedUser) {
+        this.userSubject.next(JSON.parse(storedUser));
+      }
     }
   }
 
-  login(credentials: any): Promise<boolean> {
-    // Aqui você faria a chamada para o seu backend para autenticar o usuário
-    // e obter suas informações (incluindo o role).
-    return new Promise((resolve) => {
-      // Simulação de login bem-sucedido com base no email (para demonstração)
-      if (credentials.email === 'usuario@exemplo.com') {
-        this.user = { isAuthenticated: true, role: 'usuario' };
-      } else if (credentials.email === 'shop@exemplo.com') {
-        this.user = { isAuthenticated: true, role: 'shop' };
-      } else if (credentials.email === 'admin@exemplo.com') {
-        this.user = { isAuthenticated: true, role: 'admin' };
-      } else {
-        this.user = { isAuthenticated: false, role: null };
-        resolve(false);
-        return;
-      }
-      localStorage.setItem('currentUser', JSON.stringify(this.user));
-      resolve(true);
-    });
+  login(credentials: any): Observable<boolean> {
+    console.log('login - auth fui chamado!');
+    return this.http.post<any>('http://localhost:3000/login', credentials).pipe(
+      tap((response) => {
+        console.log('Resposta do servidor (login):', response);
+        const user: User = { isAuthenticated: true, role: response.role };
+        this.userSubject.next(user);
+        if (isPlatformBrowser(this.platformId)) {
+          localStorage.setItem('currentUser', JSON.stringify(user));
+        }
+      }),
+      map(() => true),
+      catchError((error) => {
+        console.error('Erro ao fazer login:', error);
+        this.userSubject.next({ isAuthenticated: false, role: null });
+        return of(false);
+      })
+    );
   }
 
   logout(): void {
-    this.user = { isAuthenticated: false, role: null };
-    localStorage.removeItem('currentUser');
+    this.userSubject.next({ isAuthenticated: false, role: null });
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem('currentUser');
+    }
     this.router.navigate(['/login']);
   }
 
   isAuthenticated(): boolean {
-    return this.user.isAuthenticated;
+    return this.userSubject.value.isAuthenticated;
   }
 
   getUserRole(): string | null {
-    return this.user.role;
+    return this.userSubject.value.role;
   }
 
   hasRole(role: 'usuario' | 'shop' | 'admin'): boolean {

@@ -11,6 +11,10 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { UsuarioComponent } from './pages/usuario/usuario.component';
 import { ShopComponent } from './pages/shop/shop.component';
 import { AdminComponent } from './pages/admin/admin.component';
+import { AuthGuard } from './auth.guard';
+import { UsuarioRoleGuard } from './usuario-role.guard.spec';
+import { ShopRoleGuard } from './shop-role.guard.spec';
+import { AdminRoleGuard } from './admin-role.guard.spec';
 
 export const routes: Routes = [
   {
@@ -45,12 +49,11 @@ export const routes: Routes = [
     path: 'profile',
     component: ProfileComponent
   },
+  { path: 'usuario', component: UsuarioComponent, canActivate: [AuthGuard, UsuarioRoleGuard] }, // Rota protegida para usuários comuns
+  { path: 'shop', component: ShopComponent, canActivate: [AuthGuard, ShopRoleGuard] },       // Rota protegida para usuários com acesso à loja
+  { path: 'admin', component: AdminComponent, canActivate: [AuthGuard, AdminRoleGuard] },       // Rota protegida para administradores
   {
     path: '**',
     component: Error404Component
   },
-  { path: 'usuario', component: UsuarioComponent, canActivate: [] }, // Rota protegida para usuários comuns
-  { path: 'shop', component: ShopComponent, canActivate: [] },       // Rota protegida para usuários com acesso à loja
-  { path: 'admin', component: AdminComponent, canActivate: [] },       // Rota protegida para administradores
-
 ];
