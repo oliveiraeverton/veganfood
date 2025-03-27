@@ -1,1 +1,65 @@
-<p>cadastro works!</p>
+<p class="h3 bg-secondary text-center">cadastro works!</p>
+
+<form [formGroup]="cadastroForm">
+  <div class="container">
+    <div class="form-group">
+      <label for="nome">Nome: </label>
+      <input
+        id="nome"
+        type="text"
+        formControlName="nome"
+        class="form-control"
+        aria-describedby="nomeHelp"
+        placeholder="Digite seu nome"
+      />
+    </div>
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        id="email"
+        type="email"
+        formControlName="email"
+        class="form-control"
+        aria-describedby="emailHelp"
+        placeholder="Enter email"
+      />
+    </div>
+    <div class="form-group">
+      <label for="password">Password: </label>
+      <input
+        formControlName="password"
+        class="form-control"
+        aria-describedby="nomeHelp"
+        placeholder="Digite sua senha"
+        id="password"
+        type="password"
+      />
+    </div>
+    <div class="row mt-2 justify-content-between">
+      <div class="col-5">
+        <button
+          type="button"
+          class="btn btn-primary w-100"
+          (click)="onSubmit()"
+        >
+          Cadastro
+        </button>
+      </div>
+      <div class="col-5">
+        <button
+          type="button"
+          class="btn btn-secondary w-100"
+          (click)="onPrevious()"
+        >
+          Voltar
+        </button>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="h4">
+  <p>Nome digitado: {{ cadastroForm.controls["nome"].value }}</p>
+  <p>Email digitado: {{ cadastroForm.controls["email"].value }}</p>
+  <p>Senha digitada: {{ cadastroForm.controls["password"].value }}</p>
+</div>

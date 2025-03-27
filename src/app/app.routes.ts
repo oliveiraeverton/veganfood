@@ -8,6 +8,9 @@ import { Error404Component } from './pages/error404/error404.component';
 import { ListaDeComprasComponent } from './pages/lista-de-compras/lista-de-compras.component';
 import { LoginComponent } from './pages/login/login.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { UsuarioComponent } from './pages/usuario/usuario.component';
+import { ShopComponent } from './pages/shop/shop.component';
+import { AdminComponent } from './pages/admin/admin.component';
 
 export const routes: Routes = [
   {
@@ -46,5 +49,8 @@ export const routes: Routes = [
     path: '**',
     component: Error404Component
   },
+  { path: 'usuario', component: UsuarioComponent, canActivate: [] }, // Rota protegida para usuários comuns
+  { path: 'shop', component: ShopComponent, canActivate: [] },       // Rota protegida para usuários com acesso à loja
+  { path: 'admin', component: AdminComponent, canActivate: [] },       // Rota protegida para administradores
 
 ];
