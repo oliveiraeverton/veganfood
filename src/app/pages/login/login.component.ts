@@ -24,7 +24,6 @@ export class LoginComponent {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private http: HttpClient
   ) {}
 
   onSubmit() {
