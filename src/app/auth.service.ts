@@ -31,8 +31,16 @@ export class AuthService {
     }
   }
 
+  isLogado(): boolean {
+    if (isPlatformBrowser(this.platformId)) {
+      return !!localStorage.getItem('currentUser'); // Verifica apenas se estiver no navegador
+    }
+    return false;
+  }
+
+
   login(credentials: any): Observable<boolean> {
-    console.log('login - auth fui chamado!');
+    console.log('login - auth fui chamado!', credentials);
     return this.http.post<any>('http://localhost:3000/login', credentials).pipe(
       tap((response) => {
         console.log('Resposta do servidor (login):', response);

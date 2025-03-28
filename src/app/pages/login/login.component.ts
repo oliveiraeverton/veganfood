@@ -26,6 +26,7 @@ export class LoginComponent {
     private router: Router,
   ) {}
 
+
   onSubmit() {
     if (this.Entrar.valid) {
       const credentials = this.Entrar.value;
