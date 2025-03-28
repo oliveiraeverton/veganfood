@@ -30,6 +30,9 @@ export class NavbarComponent {
     this.isLogado = false; // Atualiza a variável para refletir a mudança
     console.log("Usuário deslogado:", this.isLogado);
   }
+  ngDoCheck(){
+    this.isLogado = this.authService.isLogado();
+  }
 }
 
 
