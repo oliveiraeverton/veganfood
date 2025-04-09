@@ -1,0 +1,21 @@
+name: Create diagram
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - main
+
+jobs:
+  get_data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Update diagram
+        uses: githubocto/repo-visualizer@0.7.1
+        with:
+          output_file: "images/diagram.svg"
+          excluded_paths: "node_modules,dist,.github"
+          should_push: true
+          commit_message: "Repo visualizer: updated diagram [skip ci]"
