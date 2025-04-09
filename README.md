@@ -1,5 +1,5 @@
 # View
-![Visualization of the codebase](./diagram.svg)
+![Repo diagram](images/diagram.svg)
 
 
 # Veganfood
