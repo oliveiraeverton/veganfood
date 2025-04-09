@@ -1,9 +1,13 @@
 name: Create diagram
+
 on:
   workflow_dispatch: {}
   push:
     branches:
       - main
+
+permissions:
+  contents: write
 
 jobs:
   get_data:
