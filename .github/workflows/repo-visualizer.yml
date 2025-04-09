@@ -20,6 +20,7 @@ jobs:
         uses: githubocto/repo-visualizer@0.7.1
         with:
           output_file: "images/diagram.svg"
+          file_colors: '{"js": "#4caf50", "ts": "green", "json": "#fca311", "md": "#aaa", "html": "#e34c26", "css": "#2965f1"}'
           excluded_paths: "node_modules,dist,.github"
           should_push: true
           commit_message: "Repo visualizer: updated diagram [skip ci]"
